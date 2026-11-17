@@ -1,7 +1,11 @@
 package com.codekeys.saas.entities;
 
+import com.codekeys.saas.config.TenantContext;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -17,11 +21,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+
+@FilterDef(
+        name = "tenantFilter",
+        parameters = @ParamDef(name = "tenantId", type = String.class),
+        defaultCondition = "tenant_id = :tenantId"
+)
+@Filter(name = "tenantFilter")
 public class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
+
+    @Column(name = "tenant_id", nullable = false)
+    private String tenantId;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -51,5 +65,10 @@ public class AbstractEntity {
         if(this.createdBy == null){
             this.createdBy = "SYSTEM";
         }
+        if(this.tenantId == null){
+            this.tenantId = TenantContext.getCurrentTenant();
+        }
     }
+
+
 }
