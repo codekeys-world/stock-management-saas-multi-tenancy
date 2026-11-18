@@ -3,6 +3,7 @@ package com.codekeys.saas.services.impl;
 import com.codekeys.saas.common.PageResponse;
 import com.codekeys.saas.entities.Category;
 import com.codekeys.saas.entities.Product;
+import com.codekeys.saas.exceptions.DuplicateRessourceException;
 import com.codekeys.saas.mapper.ProductMapper;
 import com.codekeys.saas.repositories.CategoryRepository;
 import com.codekeys.saas.repositories.ProductRepository;
@@ -81,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
         final Optional<Product> product = this.productRepository.findByReferenceIgnoreCase(reference);
         if(product.isPresent()){
             log.debug("Product already exist");
-            throw new RuntimeException("Product already exist");
+            throw new DuplicateRessourceException("Product already exist");
         }
     }
 

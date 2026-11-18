@@ -2,6 +2,7 @@ package com.codekeys.saas.services.impl;
 
 import com.codekeys.saas.common.PageResponse;
 import com.codekeys.saas.entities.Category;
+import com.codekeys.saas.exceptions.DuplicateRessourceException;
 import com.codekeys.saas.mapper.CategoryMapper;
 import com.codekeys.saas.repositories.CategoryRepository;
 import com.codekeys.saas.request.CategoryRequest;
@@ -74,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
         final Optional<Category> category = this.categoryRepository.findByNameIgnoreCase(name);
         if(category.isPresent()){
             log.info("Category already exist");
-            throw new RuntimeException("Category already exits");
+            throw new DuplicateRessourceException("Category already exits");
         }
     }
 }
